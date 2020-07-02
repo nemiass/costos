@@ -4,7 +4,7 @@ from tkinter import ttk
 from tkinter import *
 
 def inicializar_variables():
-	global mp,mpi,mod,moi,ocifs_acum,gastos_administrativos,gadmin_acum,impuestos,ventas,iipt,ifpt,iipp,ifpp,iimp,ifmp,iimi,ifmi,cif,cprimo,conversion,mpc,mic,cfab,cprod,cventas,d_basicos,d_basicos2,datos_mostrar, utilidad_bruta
+	global mp,mpi,mod,moi,ocifs_acum,gastos_administrativos,gadmin_acum,impuestos,ventas,iipt,ifpt,iipp,ifpp,iimp,ifmp,iimi,ifmi,cif,cprimo,conversion,mpc,mic,cfab,cprod,cventas,d_basicos,d_basicos2,datos_mostrar, utilidad_bruta, otros_gastos
 	mp = 0
 	mpi = 0
 	mod = 0
@@ -15,6 +15,7 @@ def inicializar_variables():
 	gadmin_acum = []
 	impuestos = 0.30
 	ventas = 0
+	otros_gastos = 0
 
 	iipt = 0
 	ifpt = 0
@@ -201,6 +202,13 @@ def agregar_otros_cifs():
 	except:
 		return
 
+def agregar_otros_gastos():
+	global otros_gastos
+	if validar(var_otros_gastos.get()):
+		otros_gastos = float(var_otros_gastos.get())
+		datos_mostrar["otros gastos"] = otros_gastos
+	mostrar_datos()
+
 #*********************************FUNCIONES PARA MOSTRAR Y BORRAR EN PANTALLA
 def mostrar_datos():
 	#Limpiando la tablita
@@ -284,6 +292,7 @@ def reset_todo():
 	var_gadmin.set("") 
 	var_impuestos.set("") 
 	var_ventas.set("")
+	var_otros_gastos.set("")
 
 	inicializar_variables()
 	mostrar_cifs()
@@ -346,7 +355,7 @@ def cvtansr():
 def utilidad_operativa():
 	global utilidad_bruta
 	utilidad_bruta = ventas - cventas - cprod - cfab
-	utilidad_de_operacion = utilidad_bruta - gastos_administrativos
+	utilidad_de_operacion = utilidad_bruta - gastos_administrativos - otros_gastos
 	d_basicos2["Utilidad Bruta"] = utilidad_bruta
 	d_basicos2["Utilidad Operativa"] = utilidad_de_operacion
 	d_basicos2["Utilidad despues de Imp."] = utilidad_de_operacion - (utilidad_de_operacion*impuestos)
@@ -374,10 +383,10 @@ def crear_entry(raiz, textvariable, r, c, x=5, y=6):
 	e.grid(row=r, column=c, padx=x, pady=y)
 	return e
 
-def crear_button(raiz, text, command, r, c, x=5, y=1, col=1,w=None):
+def crear_button(raiz, text, command, r, c, x=5, y=1, col=1,w=None, h=None):
 	b = Button(raiz, text=text, command=command)
 	b.grid(row=r, column=c, columnspan=col, padx=x, pady=y)
-	b.config(font=("Consolas",10), width=w)
+	b.config(font=("Consolas",10), width=w, height=h)
 	return b
 
 def crear_frame(raiz, r, c, col=1, colr=1, st=None, bg=None):
@@ -387,9 +396,16 @@ def crear_frame(raiz, r, c, col=1, colr=1, st=None, bg=None):
 	return f
 
 #************+INTERFAZ+*************
+
+#import os, sys
+#def resolver_ruta(ruta_relativa):
+ #   if hasattr(sys, '_MEIPASS'):
+  #      return os.path.join(sys._MEIPASS, ruta_relativa)
+   # return os.path.join(os.path.abspath('.'), ruta_relativa)
+
 ventana = Tk()
 ventana.title("Costos Basico")
-#ventana.iconbitmap("pato.ico")
+ventana.iconbitmap("pato.ico")
 ventana.geometry()
 ventana.config(bg="#D2B48C")
 ventana.resizable(False,False)
@@ -414,6 +430,8 @@ gastos_adml = crear_label(espacio, text="Gastos Adm:", r=7, c=0)
 impuestol = crear_label(espacio, text="Impuesto:", r=8, c=0)
 
 ventasl = crear_label(espacio, text="Ventas:", r=9, c=0)
+
+otros_gastosl = crear_label(espacio, text="Otros Gastos:", r=10, c=0)
 
 #-----------Inventarios
 inventariosl = crear_label(espacio, text="Inventarios", r=0, c=4, st="ew")
@@ -444,7 +462,7 @@ var_ocifs = StringVar()
 var_gadmin = StringVar()
 var_impuestos = StringVar()
 var_ventas = StringVar()
-
+var_otros_gastos = StringVar()
 
 mpe = crear_entry(espacio, textvariable=var_mp, r=1, c=1)
 
@@ -461,6 +479,8 @@ gastos_adme = crear_entry(espacio, textvariable=var_gadmin, r=7, c=1)
 impuestoe = crear_entry(espacio, textvariable=var_impuestos, r=8, c=1)
 
 ventase = crear_entry(espacio, textvariable=var_ventas, r=9, c=1)
+
+otros_gastose = crear_entry(espacio, textvariable=var_otros_gastos, r=10, c=1)
 
 #---------Inventarios
 var_iipt = StringVar()
@@ -488,9 +508,8 @@ iimie = crear_entry(espacio, textvariable=var_iimi, r=7, c=4)
 
 ifmie = crear_entry(espacio, textvariable=var_ifmi, r=8, c=4)
 
+
 #Buttons
-
-
 mpb = crear_button(espacio, text="Agregar",command=agregar_mp, r=1, c=2)
 
 mpib = crear_button(espacio, text="Agregar", command=agregar_mpi, r=2, c=2)
@@ -509,6 +528,8 @@ gastos_adme = crear_button(espacio, text="Agregar", command=agregar_gadmin, r=7,
 impuestob = crear_button(espacio, text="Agregar", command=agregar_impuestos, r=8, c=2)
 
 ventasb = crear_button(espacio, text="Agregar", command=agregar_ventas, r=9, c=2)
+
+otros_gastosb = crear_button(espacio, text="Agregar", command=agregar_otros_gastos, r=10, c=2)
 
 #---------Inventarios
 iiptb = crear_button(espacio, text="Agregar", command=agregar_iipt, r=1, c=5)
@@ -570,11 +591,12 @@ tabla6 = ttk.Treeview(espacio4, height=23)
 tabla6.grid(row=0, column=0, sticky="nsew")
 tabla6.heading("#0", text="Datos para la operacion", anchor=CENTER)
 
+
 #--boton calcular todo
-calc = crear_button(espacio4, text="Realizar calculo", command=realizar_calculo, r=1, c=0)
+calc = crear_button(espacio4, text="Realizar calculo", command=realizar_calculo, r=1, c=0, h=2,y=3)
 
 
-calc2 = crear_button(espacio4, text="Resetear Todo", command=reset_todo, r=2, c=0)
+calc2 = crear_button(espacio4, text="Resetear Todo", command=reset_todo, r=2, c=0, w=16)
 
 
 #Frame del Pie de la Interfaz
