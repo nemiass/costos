@@ -4,7 +4,7 @@ from tkinter import ttk
 from tkinter import *
 
 def inicializar_variables():
-	global mp,mpi,mod,moi,ocifs_acum,gastos_administrativos,gadmin_acum,impuestos,ventas,iipt,ifpt,iipp,ifpp,iimp,ifmp,iimi,ifmi,cif,cprimo,conversion,mpc,mic,cfab,cprod,cventas,d_basicos,d_basicos2,datos_mostrar, utilidad_bruta, otros_gastos
+	global mp,mpi,mod,moi,ocifs_acum,gastos_administrativos,gadmin_acum,impuestos,ventas,iipt,ifpt,iipp,ifpp,iimp,ifmp,iimi,ifmi,cif,cprimo,conversion,mpc,mic,cfab,cprod,cventas,d_basicos,d_basicos2,datos_mostrar, utilidad_bruta, otros_gastos, on_of_inventarios
 	mp = 0
 	mpi = 0
 	mod = 0
@@ -40,6 +40,8 @@ def inicializar_variables():
 	datos_mostrar = {}
 
 	utilidad_bruta = 0
+
+	on_of_inventarios = False
 
 inicializar_variables()
 
@@ -211,6 +213,79 @@ def agregar_otros_gastos():
 		datos_mostrar["otros gastos"] = otros_gastos
 	mostrar_datos()
 
+def activar_inventarios():
+	global on_of_inventarios
+	if on_of_inventarios == False:
+		on_of_inventarios = True
+		txt_inventario.set("> of <")
+		onb.config(bg="green")
+		entry_inventarios()
+	else:
+		on_of_inventarios = False
+		txt_inventario.set("> on <")
+		onb.config(bg="red")
+		entry_inventarios()
+
+def entry_inventarios():
+	if on_of_inventarios == False:
+		iipte.config(state="readonly")
+		ifpte.config(state="readonly")
+		iippe.config(state="readonly")
+		ifppe.config(state="readonly")
+		iimpe.config(state="readonly")
+		ifmpe.config(state="readonly")
+		iimie.config(state="readonly")
+		ifmie.config(state="readonly")
+		reset_inventarios()
+	else:
+		iipte.config(state="normal")
+		ifpte.config(state="normal")
+		iippe.config(state="normal")
+		ifppe.config(state="normal")
+		iimpe.config(state="normal")
+		ifmpe.config(state="normal")
+		iimie.config(state="normal")
+		ifmie.config(state="normal")
+def reset_inventarios():
+	global iipt,ifpt,iipp,ifpp,iimp,ifmp,iimi,ifmi, datos_mostrar
+	iipt = 0
+	ifpt = 0
+	iipp = 0
+	ifpp = 0
+	iimp = 0
+	ifmp = 0
+	iimi = 0
+	ifmi = 0
+
+	datos_mostrar["IIPT"] = iipt
+	datos_mostrar["IFPT"] = ifpt
+	datos_mostrar["IIPP"] = iipp
+	datos_mostrar["IFPP"] = ifpp
+	datos_mostrar["IIMP"] = iimp
+	datos_mostrar["IFMP"] = ifmp
+	datos_mostrar["IIMI"] = iimi
+	datos_mostrar["IFMI"] = ifmi
+
+	del(datos_mostrar["IIPT"])
+	del(datos_mostrar["IFPT"])
+	del(datos_mostrar["IIPP"])
+	del(datos_mostrar["IFPP"])
+	del(datos_mostrar["IIMP"])
+	del(datos_mostrar["IFMP"])
+	del(datos_mostrar["IIMI"])
+	del(datos_mostrar["IFMI"])
+
+	var_iipt.set("") 
+	var_ifpt.set("") 
+	var_iipp.set("") 
+	var_ifpp.set("") 
+	var_iimp.set("") 
+	var_ifmp.set("") 
+	var_iimi.set("") 
+	var_ifmi.set("") 
+	cifs()
+	mostrar_datos()
+
 #*********************************FUNCIONES PARA MOSTRAR Y BORRAR EN PANTALLA
 def mostrar_datos():
 	#Limpiando la tablita
@@ -316,7 +391,6 @@ def materia_indi_cosumida():
 	d_basicos["Materiales Indirectos Consumidos (MIC)"] = mic
 
 def cifs():
-	materia_prim_consumida()
 	materia_indi_cosumida()
 	otros_cifs = sum(ocifs_acum)
 	global cif
@@ -330,6 +404,7 @@ def cal_gastos_adm():
 	datos_mostrar['Gast.Administrativos'] = gastos_administrativos
 
 def costo_primo():
+	materia_prim_consumida()
 	global cprimo
 	cprimo = mpc + mod
 	d_basicos["Costo Primo"] = cprimo
@@ -340,6 +415,7 @@ def costo_conversion():
 	d_basicos["Costo de Conversion"] = conversion
 
 def cfabr():
+	materia_prim_consumida()
 	global cfab
 	cfab = mpc + mod + cif
 	d_basicos2["Costo de Fabricacion"] = cfab
@@ -356,11 +432,18 @@ def cvtansr():
 
 def utilidad_operativa():
 	global utilidad_bruta
-	utilidad_bruta = ventas - cventas - cprod - cfab
-	utilidad_de_operacion = utilidad_bruta - gastos_administrativos - otros_gastos
-	d_basicos2["Utilidad Bruta"] = utilidad_bruta
-	d_basicos2["Utilidad Operativa"] = utilidad_de_operacion
-	d_basicos2["Utilidad despues de Imp."] = utilidad_de_operacion - (utilidad_de_operacion*impuestos)
+	if on_of_inventarios:
+		utilidad_bruta = ventas - cventas - cprod - cfab
+		utilidad_de_operacion = utilidad_bruta - gastos_administrativos - otros_gastos
+		d_basicos2["Utilidad Bruta"] = utilidad_bruta
+		d_basicos2["Utilidad Operativa"] = utilidad_de_operacion
+		d_basicos2["Utilidad despues de Imp."] = utilidad_de_operacion - (utilidad_de_operacion*impuestos)
+	else:
+		utilidad_bruta = ventas - cfab
+		utilidad_de_operacion = utilidad_bruta - gastos_administrativos - otros_gastos
+		d_basicos2["Utilidad Bruta"] = utilidad_bruta
+		d_basicos2["Utilidad Operativa"] = utilidad_de_operacion
+		d_basicos2["Utilidad despues de Imp."] = utilidad_de_operacion - (utilidad_de_operacion*impuestos)
 	
 def realizar_calculo():
 	cifs()
@@ -384,11 +467,21 @@ def crear_entry(raiz, textvariable, r, c, x=5, y=6):
 	e = Entry(raiz, textvariable=textvariable, justify="center")
 	e.grid(row=r, column=c, padx=x, pady=y)
 	return e
+def crear_entry2(raiz, textvariable, r, c, x=5, y=6):
+	e = Entry(raiz, textvariable=textvariable, justify="center", state="readonly")
+	e.grid(row=r, column=c, padx=x, pady=y)
+	return e
 
-def crear_button(raiz, text, command, r, c, x=5, y=1, col=1,w=None, h=None):
+def crear_button(raiz, text, r, c,command=None, x=5, y=1, col=1,w=None, h=None, bg=None):
 	b = Button(raiz, text=text, command=command)
 	b.grid(row=r, column=c, columnspan=col, padx=x, pady=y)
-	b.config(font=("Consolas",10), width=w, height=h)
+	b.config(font=("Consolas",10), width=w, height=h, bg=bg)
+	return b
+
+def crear_button2(raiz, textvariable, r, c,command=None, x=5, y=1, col=1,w=None, h=None, bg=None):
+	b = Button(raiz, textvariable=textvariable, command=command)
+	b.grid(row=r, column=c, columnspan=col, padx=x, pady=y)
+	b.config(font=("Consolas",10), width=w, height=h, bg=bg)
 	return b
 
 def crear_frame(raiz, r, c, col=1, colr=1, st=None, bg=None):
@@ -494,21 +587,21 @@ var_ifmp = StringVar()
 var_iimi = StringVar()
 var_ifmi = StringVar()
 
-iipte = crear_entry(espacio, textvariable=var_iipt, r=1, c=4)
+iipte = crear_entry2(espacio, textvariable=var_iipt, r=1, c=4)
 
-ifpte = crear_entry(espacio, textvariable=var_ifpt, r=2, c=4)
+ifpte = crear_entry2(espacio, textvariable=var_ifpt, r=2, c=4)
 
-iippe = crear_entry(espacio, textvariable=var_iipp, r=3, c=4)
+iippe = crear_entry2(espacio, textvariable=var_iipp, r=3, c=4)
 
-ifppe = crear_entry(espacio, textvariable=var_ifpp, r=4, c=4)
+ifppe = crear_entry2(espacio, textvariable=var_ifpp, r=4, c=4)
 
-iimpe = crear_entry(espacio, textvariable=var_iimp, r=5, c=4)
+iimpe = crear_entry2(espacio, textvariable=var_iimp, r=5, c=4)
 
-ifmpe = crear_entry(espacio, textvariable=var_ifmp, r=6, c=4)
+ifmpe = crear_entry2(espacio, textvariable=var_ifmp, r=6, c=4)
 
-iimie = crear_entry(espacio, textvariable=var_iimi, r=7, c=4)
+iimie = crear_entry2(espacio, textvariable=var_iimi, r=7, c=4)
 
-ifmie = crear_entry(espacio, textvariable=var_ifmi, r=8, c=4)
+ifmie = crear_entry2(espacio, textvariable=var_ifmi, r=8, c=4)
 
 
 #Buttons
@@ -520,7 +613,7 @@ modb = crear_button(espacio, text="Agregar", command=agregar_mod, r=3, c=2)
 
 moib = crear_button(espacio, text="Agregar", command=agregar_moi, r=4, c=2)
 
-add_todo = crear_button(espacio, text="Agregar Todo", command=set_datos_basicos, r=5, c=1)
+add_todo = crear_button(espacio, text="Agregar Todo", command=set_datos_basicos, r=5, c=1, bg="pink")
 
 
 otros_cifsb = crear_button(espacio, text="Agregar", command=agregar_otros_cifs, r=6, c=2)
@@ -550,7 +643,13 @@ iimib = crear_button(espacio, text="Agregar", command=agregar_iimi, r=7, c=5)
 
 ifmib = crear_button(espacio, text="Agregar", command=agregar_ifmi, r=8, c=5)
 
-add_todo2 = crear_button(espacio, text="Agregar Todo", command=set_inventarios, r=9, c=4)
+txt_inventario = StringVar()
+txt_inventario.set("> on <")
+
+onb = crear_button2(espacio, textvariable=txt_inventario, r=9, c=4, command=activar_inventarios, bg="red")
+
+
+add_todo2 = crear_button(espacio, text="Agregar Todo", command=set_inventarios, r=10, c=4, bg="pink")
 
 #Espacio 2
 espacio2 = crear_frame(ventana, r=0, c=1, bg="#D2B48C")
@@ -595,7 +694,7 @@ tabla6.heading("#0", text="Datos para la operacion", anchor=CENTER)
 
 
 #--boton calcular todo
-calc = crear_button(espacio4, text="Realizar calculo", command=realizar_calculo, r=1, c=0, h=2,y=3)
+calc = crear_button(espacio4, text="Realizar calculo", command=realizar_calculo, r=1, c=0, h=2,y=3, bg="pink")
 
 
 calc2 = crear_button(espacio4, text="Resetear Todo", command=reset_todo, r=2, c=0, w=16)
