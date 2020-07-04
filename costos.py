@@ -134,12 +134,14 @@ def agregar_iimi():
 	if validar(var_iimi.get()):
 		iimi = float(var_iimi.get())
 		datos_mostrar["IIMI"] = iimi
+	cifs()
 	mostrar_datos()
 def agregar_ifmi():
 	global ifmi
 	if validar(var_ifmi.get()):
 		ifmi = float(var_ifmi.get())
 		datos_mostrar["IFMI"] = ifmi
+	cifs()
 	mostrar_datos()
 
 def set_inventarios():
@@ -405,7 +407,7 @@ def crear_frame(raiz, r, c, col=1, colr=1, st=None, bg=None):
 
 ventana = Tk()
 ventana.title("Costos Basico")
-ventana.iconbitmap("pato.ico")
+#ventana.iconbitmap("pato.ico")
 ventana.geometry()
 ventana.config(bg="#D2B48C")
 ventana.resizable(False,False)
@@ -603,7 +605,7 @@ calc2 = crear_button(espacio4, text="Resetear Todo", command=reset_todo, r=2, c=
 pie = crear_frame(ventana, r=2, c=0, col=3, st="nsew",bg="#FFD700")
 
 mensaje = StringVar()
-mensaje.set("version 1.0 \U0001f951 "*5)
+mensaje.set("version 1.1 \U0001f951 "*5)
 
 monitor = Label(pie, textvar=mensaje)
 monitor.pack(expand=True, fill="x")
