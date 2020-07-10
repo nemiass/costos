@@ -4,11 +4,13 @@ from tkinter import ttk
 from tkinter import *
 
 def inicializar_variables():
-	global mp,mpi,mod,moi,ocifs_acum,gastos_administrativos,gadmin_acum,impuestos,ventas,iipt,ifpt,iipp,ifpp,iimp,ifmp,iimi,ifmi,cif,cprimo,conversion,mpc,mic,cfab,cprod,cventas,d_basicos,d_basicos2,datos_mostrar, utilidad_bruta, otros_gastos, on_of_inventarios
+	global mp,mpi,mod,moi,ocifs_acum,gastos_administrativos,gadmin_acum,impuestos,ventas,iipt,ifpt,iipp,ifpp,iimp,ifmp,iimi,ifmi,cif,cprimo,conversion,mpc,mic,cfab,cprod,cventas,d_basicos,d_basicos2,datos_mostrar, utilidad_bruta, otros_gastos, on_of_inventarios, color
 	mp = 0
 	mpi = 0
 	mod = 0
 	moi = 0
+
+	color = "#73947D"
 
 	ocifs_acum = []
 	gastos_administrativos = 0
@@ -84,7 +86,6 @@ def agregar_moi():
 		datos_mostrar["moi"] = moi
 		cifs()
 		mostrar_datos()
-
 
 def set_datos_basicos():
 	agregar_mp()
@@ -433,7 +434,7 @@ def cvtansr():
 def utilidad_operativa():
 	global utilidad_bruta
 	if on_of_inventarios:
-		utilidad_bruta = ventas - cventas - cprod - cfab
+		utilidad_bruta = ventas - cventas 
 		utilidad_de_operacion = utilidad_bruta - gastos_administrativos - otros_gastos
 		d_basicos2["Utilidad Bruta"] = utilidad_bruta
 		d_basicos2["Utilidad Operativa"] = utilidad_de_operacion
@@ -455,13 +456,17 @@ def realizar_calculo():
 	utilidad_operativa()
 	mostrar_resultados()
 
-
 #FUNCIONES PARA INTERFAZ BASICA
-def crear_label(raiz, text, r, c,columnspan=1,x=0, y=0, st="e", tam=None, fg="white", bg="black"):
+def crear_label(raiz, r, c, text=None,columnspan=1,x=0, y=0, st="e", tam=None, fg="white", bg="black"):
 	l = Label(raiz, text=text)
 	l.grid(row=r, column=c, columnspan=columnspan, padx=x, pady=y, sticky=st)
 	l.config(bg=bg, font=("Consolas",14), fg=fg, width=tam)
 	return l
+
+def crear_canvas(raiz):
+	c = Canvas(raiz)
+	c.pack()
+	return c
 
 def crear_entry(raiz, textvariable, r, c, x=5, y=6):
 	e = Entry(raiz, textvariable=textvariable, justify="center")
@@ -490,41 +495,51 @@ def crear_frame(raiz, r, c, col=1, colr=1, st=None, bg=None):
 	f.config(bg=bg)
 	return f
 
-#************+INTERFAZ+*************
+#Funcion de busqueda 
+import os
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
 
-#import os, sys
-#def resolver_ruta(ruta_relativa):
- #   if hasattr(sys, '_MEIPASS'):
-  #      return os.path.join(sys._MEIPASS, ruta_relativa)
-   # return os.path.join(os.path.abspath('.'), ruta_relativa)
+    return os.path.join(base_path, relative_path)
+
+#************+INTERFAZ+*************
 
 ventana = Tk()
 ventana.title("Costos Basico")
-#ventana.iconbitmap("pato.ico")
+icono = resource_path("pato.ico")
+ventana.iconbitmap(icono)
 ventana.geometry()
-ventana.config(bg="#D2B48C")
+ventana.config(bg=color)
 ventana.resizable(False,False)
 
-espacio = crear_frame(ventana, r=0, c=0, st="nsew", bg="black")
+
+img = resource_path("thanos.png")
+imagen = PhotoImage(file=img)
+espacio = crear_label(ventana, r=0, c=0, st="nsew", bg=color)
+espacio.config(image=imagen)
 
 #Labels
-datos_basicos = crear_label(espacio, "Datos Basicos", 0, 1, st="ew")
+datos_basicos = crear_label(espacio, text="Datos Basicos", r=0, c=1, st="ew")
+#datos_basicos.config(bg='black')
 
-mpl = crear_label(espacio, text="MP:", r=1, c=0)
+mpl = crear_label(espacio, text="MP:", r=1, c=0, tam=13)
 
-mpil = crear_label(espacio, text="MPI:",r=2, c=0)
+mpil = crear_label(espacio, text="MPI:",r=2, c=0, tam=13)
 
-modl = crear_label(espacio, text="MOD:", r=3, c=0)
+modl = crear_label(espacio, text="MOD:", r=3, c=0, tam=13)
 
-moil = crear_label(espacio, text="MOI:", r=4, c=0)
+moil = crear_label(espacio, text="MOI:", r=4, c=0, tam=13)
 
-otros_cifsl = crear_label(espacio, text="Otros CIFs:", r=6, c=0)
+otros_cifsl = crear_label(espacio, text="Otros CIFs:", r=6, c=0, tam=13)
 
-gastos_adml = crear_label(espacio, text="Gastos Adm:", r=7, c=0)
+gastos_adml = crear_label(espacio, text="Gastos Adm:", r=7, c=0, tam=13)
 
-impuestol = crear_label(espacio, text="Impuesto:", r=8, c=0)
+impuestol = crear_label(espacio, text="Impuesto:", r=8, c=0, tam=13)
 
-ventasl = crear_label(espacio, text="Ventas:", r=9, c=0)
+ventasl = crear_label(espacio, text="Ventas:", r=9, c=0, tam=13)
 
 otros_gastosl = crear_label(espacio, text="Otros Gastos:", r=10, c=0)
 
@@ -603,7 +618,6 @@ iimie = crear_entry2(espacio, textvariable=var_iimi, r=7, c=4)
 
 ifmie = crear_entry2(espacio, textvariable=var_ifmi, r=8, c=4)
 
-
 #Buttons
 mpb = crear_button(espacio, text="Agregar",command=agregar_mp, r=1, c=2)
 
@@ -614,7 +628,6 @@ modb = crear_button(espacio, text="Agregar", command=agregar_mod, r=3, c=2)
 moib = crear_button(espacio, text="Agregar", command=agregar_moi, r=4, c=2)
 
 add_todo = crear_button(espacio, text="Agregar Todo", command=set_datos_basicos, r=5, c=1, bg="pink")
-
 
 otros_cifsb = crear_button(espacio, text="Agregar", command=agregar_otros_cifs, r=6, c=2)
 
@@ -652,7 +665,7 @@ onb = crear_button2(espacio, textvariable=txt_inventario, r=9, c=4, command=acti
 add_todo2 = crear_button(espacio, text="Agregar Todo", command=set_inventarios, r=10, c=4, bg="pink")
 
 #Espacio 2
-espacio2 = crear_frame(ventana, r=0, c=1, bg="#D2B48C")
+espacio2 = crear_frame(ventana, r=0, c=1, bg=color)
 
 
 tabla = ttk.Treeview(espacio2, height=7)
@@ -669,9 +682,9 @@ borrar2 = crear_button(espacio2, text="Borrar", command=borrar_gadmin, r=3, c=0)
 
 
 #ESPACIO 3
-espacio3 = crear_frame(ventana, r=1, c=0, col=2, st="nsew", bg="#D2B48C")
+espacio3 = crear_frame(ventana, r=1, c=0, col=2, st="nsew", bg=color)
 
-titulo = crear_label(espacio3, text=">>>RESULTADOS<<<", r=0, c=0, x=3, st="ew", columnspan=3, bg="#D2B48C", fg="black")
+titulo = crear_label(espacio3, text="\U0001f440 RESULTADOS \U0001f440", r=0, c=0, x=3, st="ew", columnspan=3, bg=color, fg="black")
 
 
 #-------tablas
@@ -686,28 +699,26 @@ tabla5.heading("#0", text="Datos", anchor=CENTER)
 tabla5.heading("#1", text="Respuesta", anchor=CENTER)
 
 #ESPACIO4 
-espacio4 = crear_frame(ventana, r=0, c=2, colr=2, st="nsew", bg="#D2B48C")
+espacio4 = crear_frame(ventana, r=0, c=2, colr=2, st="nsew", bg=color)
 
 tabla6 = ttk.Treeview(espacio4, height=23)
 tabla6.grid(row=0, column=0, sticky="nsew")
 tabla6.heading("#0", text="Datos para la operacion", anchor=CENTER)
 
-
 #--boton calcular todo
 calc = crear_button(espacio4, text="Realizar calculo", command=realizar_calculo, r=1, c=0, h=2,y=3, bg="pink")
 
-
 calc2 = crear_button(espacio4, text="Resetear Todo", command=reset_todo, r=2, c=0, w=16)
 
-
 #Frame del Pie de la Interfaz
-pie = crear_frame(ventana, r=2, c=0, col=3, st="nsew",bg="#FFD700")
+pie = crear_frame(ventana, r=2, c=0, col=3, st="nsew",bg=color)
 
 mensaje = StringVar()
-mensaje.set("version 1.1 \U0001f951 "*5)
+mensaje.set("version 1.5 \U0001f951 "*5)
 
 monitor = Label(pie, textvar=mensaje)
 monitor.pack(expand=True, fill="x")
 monitor.config(bg="#FFD700",font=("Consolas",14))
+
 
 ventana.mainloop()
