@@ -15,7 +15,6 @@ a = Analysis(['costos.py'],
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
-a.datas += [('thanos.png','C:\\Users\\Ponziano\\Desktop\\costos\\thanos.png', "DATA")]
 a.datas += [('pato.ico','C:\\Users\\Ponziano\\Desktop\\costos\\pato.ico', "DATA")]
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)

@@ -457,15 +457,15 @@ def realizar_calculo():
 	mostrar_resultados()
 
 #FUNCIONES PARA INTERFAZ BASICA
-def crear_label(raiz, r, c, text=None,columnspan=1,x=0, y=0, st="e", tam=None, fg="white", bg="black"):
+def crear_label(raiz, r, c, text=None,columnspan=1,x=0, y=0, st="e", tam=None, fg="white", bg="#73947D"):
 	l = Label(raiz, text=text)
 	l.grid(row=r, column=c, columnspan=columnspan, padx=x, pady=y, sticky=st)
 	l.config(bg=bg, font=("Consolas",14), fg=fg, width=tam)
 	return l
 
-def crear_canvas(raiz):
+def crear_canvas(raiz, r, c):
 	c = Canvas(raiz)
-	c.pack()
+	c.grid(row=r, column=c)
 	return c
 
 def crear_entry(raiz, textvariable, r, c, x=5, y=6):
@@ -516,30 +516,27 @@ ventana.config(bg=color)
 ventana.resizable(False,False)
 
 
-img = resource_path("thanos.png")
-imagen = PhotoImage(file=img)
-espacio = crear_label(ventana, r=0, c=0, st="nsew", bg=color)
-espacio.config(image=imagen)
+espacio = crear_frame(ventana, r=0, c=0, st="nsew", bg=color)
 
 #Labels
 datos_basicos = crear_label(espacio, text="Datos Basicos", r=0, c=1, st="ew")
 #datos_basicos.config(bg='black')
 
-mpl = crear_label(espacio, text="MP:", r=1, c=0, tam=13)
+mpl = crear_label(espacio, text="MP:", r=1, c=0)
 
-mpil = crear_label(espacio, text="MPI:",r=2, c=0, tam=13)
+mpil = crear_label(espacio, text="MPI:",r=2, c=0)
 
-modl = crear_label(espacio, text="MOD:", r=3, c=0, tam=13)
+modl = crear_label(espacio, text="MOD:", r=3, c=0)
 
-moil = crear_label(espacio, text="MOI:", r=4, c=0, tam=13)
+moil = crear_label(espacio, text="MOI:", r=4, c=0)
 
-otros_cifsl = crear_label(espacio, text="Otros CIFs:", r=6, c=0, tam=13)
+otros_cifsl = crear_label(espacio, text="Otros CIFs:", r=6, c=0)
 
-gastos_adml = crear_label(espacio, text="Gastos Adm:", r=7, c=0, tam=13)
+gastos_adml = crear_label(espacio, text="Gastos Adm:", r=7, c=0)
 
-impuestol = crear_label(espacio, text="Impuesto:", r=8, c=0, tam=13)
+impuestol = crear_label(espacio, text="Impuesto:", r=8, c=0)
 
-ventasl = crear_label(espacio, text="Ventas:", r=9, c=0, tam=13)
+ventasl = crear_label(espacio, text="Ventas:", r=9, c=0)
 
 otros_gastosl = crear_label(espacio, text="Otros Gastos:", r=10, c=0)
 
