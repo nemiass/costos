@@ -2,28 +2,50 @@ from tkinter import *
 import time
 import webbrowser
 
+global cont, estado
+cont = 6
+estado = False
+
 def activar():
-	b2.config(state="normal")
-	b1.config(state="disabled")
-	var_bomba.set("\U0001f4a5")
-	time.sleep(1)
-	start()
+	global cont, estado
+	estado = True
+	contador()
+
+def contador():
+	global cont, estado
+	if estado == True:
+		cont-=1
+		b2.config(state="normal")
+		b1.config(state="disabled")
+		var_bomba.set(cont)
+		if cont == 0:
+			var_bomba.set("\U0001f4a5")
+			estado = False
+			cont = 0
+			start()
+		label.after(1000, contador);
 
 def desactivar():
+	global cont, estado
+	estado = False
 	b1.config(state="normal")
 	b2.config(state="disabled")
-	var_bomba.set("\U0001f4a3")
-	quit()
+	if cont > 0:
+		var_bomba.set(cont)
+	else:
+		var_bomba.set("\U0001f4a3")
+		cont = 6
+
+def start2():
+	print("Bomba explota")
 
 def start():
+	time.sleep(1)
 	n=0
-	while n <= 50:
+	while n <= 99:
 		webbrowser.open('https://www.xnxx.com/video-mnn8ff5/gay_sexy_trap_brazilian_porn_actors_male')
 		n+=1
-
-
-
-
+		
 def main():
 	global b1, b2, label
 	frame = Frame(root).pack(expand="True", fill="both")
