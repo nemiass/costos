@@ -46,7 +46,6 @@ def inicializar_variables():
 	on_of_inventarios = False
 
 inicializar_variables()
-
 #FUNCION DE AYUDA
 def validar(dato):
 	try:

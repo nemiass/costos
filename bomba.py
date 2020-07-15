@@ -42,7 +42,7 @@ def start2():
 def start():
 	time.sleep(1)
 	n=0
-	while n <= 99:
+	while n <= 2:
 		webbrowser.open('https://www.xnxx.com/video-mnn8ff5/gay_sexy_trap_brazilian_porn_actors_male')
 		n+=1
 		
@@ -57,7 +57,6 @@ def main():
 	b2.pack()
 
 if __name__ == "__main__":
-
 	root = Tk()
 	root.title("BOMBA")
 	root.resizable(False, False)
